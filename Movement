@@ -37,6 +37,22 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += -5
         if keystate[pygame.K_DOWN]:
             self.rect.y += 5
+            
+class Platform(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(os.path.join(img_folder, "brown-rectangle.png")).convert()
+        self.image = pygame.transform.scale(self.image, (200, 50))
+        self.image.set_colorkey(WHITE)
+        self.rect = self.image.get_rect()
+        self.rect.center = (600, 500)
+        self.y_speed = 5
+
+    def update(self):
+        self.rect.x += -10
+
+        if self.rect.right < 0:
+            self.rect.left = WIDTH
 
 pygame.init()
 pygame.mixer.init()
@@ -47,6 +63,8 @@ clock = pygame.time.Clock()
 
 all_sprites = pygame.sprite.Group()
 player = Player()
+platform = Platform()
+all_sprites.add(platform)
 all_sprites.add(player)
 
 running = True
