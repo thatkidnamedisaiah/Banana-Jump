@@ -100,6 +100,9 @@ all_sprites.add(player)
 platform = Platform()
 all_sprites.add(platform)
 
+bkgr_image = pygame.image.load(os.path.join(img_folder, "Jungle-Background.png")).convert()
+background = pygame.transform.scale(bkgr_image, (WIDTH, HEIGHT))
+background_rect = background.get_rect()
 
 running = True
 while running:
@@ -112,7 +115,7 @@ while running:
 
     all_sprites.update()
                 
-    screen.fill(GREEN)
+     screen.blit(background, background_rect)
     all_sprites.draw(screen)
 
     pygame.display.flip()
