@@ -36,7 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottom = HEIGHT - 10
         self.speedx = 0
         self.shield = 100
-        self.shoot_delay = 250
+        self.shoot_delay = 300
         self.last_shot = pygame.time.get_ticks()
 
         self.pos = vec(10, GROUND - 60)
@@ -89,7 +89,16 @@ class Player(pygame.sprite.Sprite):
 class Rocket(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(os.path.join(img_folder, "Rocket0.png")).convert()
+
+        self.rockets = [
+            pygame.image.load(os.path.join(img_folder, "Rocket0.png")).convert(),
+            pygame.image.load(os.path.join(img_folder, "Rocket1.png")).convert(),
+            pygame.image.load(os.path.join(img_folder, "Rocket2.png")).convert(),
+            pygame.image.load(os.path.join(img_folder, "Rocket3.png")).convert()]
+
+        self.rocket_count = 0
+        
+        self.image = self.rockets[self.rocket_count]
         self.image = pygame.transform.scale(self.image, (100, 50))
         self.image.set_colorkey(GRAY)
 
@@ -100,6 +109,15 @@ class Rocket(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.x += self.speedx
+
+        self.image = self.rockets[self.rocket_count]
+        self.image = pygame.transform.scale(self.image, (100, 50))
+        self.image.set_colorkey(GRAY)
+
+        self.rocket_count += 1
+        if self.rocket_count > 3:
+            self.rocket_count = 0
+            
         if self.rect.left > WIDTH:
             self.kill()
 
@@ -132,6 +150,7 @@ clock = pygame.time.Clock()
 
 all_sprites = pygame.sprite.Group()
 rockets = pygame.sprite.Group()
+
 player = Player()
 all_sprites.add(player)
 
