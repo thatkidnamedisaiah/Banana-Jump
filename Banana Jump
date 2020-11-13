@@ -121,26 +121,46 @@ class Rocket(pygame.sprite.Sprite):
         if self.rect.left > WIDTH:
             self.kill()
 
-class Platform(pygame.sprite.Sprite):
+class Banana(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(os.path.join(img_folder, "brown-rectangle.png")).convert()
-        self.image = pygame.transform.scale(self.image, (200, 50))
-        self.image.set_colorkey(WHITE)
+        
+        self.banana = [
+            pygame.image.load(os.path.join(img_folder, "Banana_0.png")).convert(),
+            pygame.image.load(os.path.join(img_folder, "Banana_1.png")).convert(),
+            pygame.image.load(os.path.join(img_folder, "Banana_2.png")).convert(),
+            pygame.image.load(os.path.join(img_folder, "Banana_3.png")).convert(),
+            pygame.image.load(os.path.join(img_folder, "Banana_4.png")).convert(),
+            pygame.image.load(os.path.join(img_folder, "Banana_5.png")).convert()]
+
+        self.banana_count = 0
+
+        self.image = self.banana[self.banana_count]
+        self.image = pygame.transform.scale(self.image, (110, 100))
+        self.image.set_colorkey(BLACK)
+
         self.rect = self.image.get_rect()
         self.rect.center = (600, 500)
-        self.y_speed = 5
+        self.y_speed = 3
 
         self.pos = vec(10, GROUND - 60)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         
     def update(self):
-        self.rect.x += -10
+        self.rect.x += -5
 
-        if self.rect.right < 0:
-            self.rect.left = WIDTH
+        self.image = self.banana[self.banana_count]
+        self.image = pygame.transform.scale(self.image, (110, 100))
+        self.image.set_colorkey(BLACK)
 
+        self.banana_count += 1
+        if self.banana_count > 5:
+            self.banana_count = 0
+            
+        if self.rect.left > WIDTH:
+            self.kill()
+        
 pygame.init()
 pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -154,8 +174,8 @@ rockets = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
 
-platform = Platform()
-all_sprites.add(platform)
+banana = Banana()
+all_sprites.add(banana)
 
 bkgr_image = pygame.image.load(os.path.join(img_folder, "Jungle-Background.png")).convert()
 background = pygame.transform.scale(bkgr_image, (WIDTH, HEIGHT))
