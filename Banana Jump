@@ -2,7 +2,7 @@ import pygame
 import random
 import os
 
-WIDTH = 800
+WIDTH = 1500
 HEIGHT = 600
 FPS = 30
 GROUND = HEIGHT
@@ -13,7 +13,7 @@ PLAYER_ACC = 0.5
 PLAYER_FRICTION = -0.12
 PLAYER_GRAV = 0.5
 vec = pygame.math.Vector2
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                       
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -23,6 +23,10 @@ GRAY = (165, 165, 165)
 
 game_folder = os.path.dirname(__file__)
 img_folder = os.path.join(game_folder, "Banana__Jump__Pictures")
+def newBanana():
+    b = Banana()
+    all_sprites.add(b)
+    bananas.add(b)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -71,7 +75,7 @@ class Player(pygame.sprite.Sprite):
              self.pos.x = WIDTH
         if self.pos.x < 0:
              self.pos.x = 0
-             
+
         if self.pos.y > GROUND:
              self.pos.y = GROUND + 1
              self.vel.y = 0
@@ -105,7 +109,7 @@ class Rocket(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.bottom = y
         self.rect.centerx = x
-        self.speedx = 10
+        self.speedx = 50
 
     def update(self):
         self.rect.x += self.speedx
@@ -140,15 +144,12 @@ class Banana(pygame.sprite.Sprite):
         self.image.set_colorkey(BLACK)
 
         self.rect = self.image.get_rect()
-        self.rect.center = (600, 500)
-        self.y_speed = 3
-
-        self.pos = vec(10, GROUND - 60)
-        self.vel = vec(0, 0)
-        self.acc = vec(0, 0)
+        self.rect.x = random.randrange(WIDTH, WIDTH + 400)
+        self.rect.y = random.randrange(0, HEIGHT - self.rect.height)
+        self.speedx = random.randrange(1, 5)
         
     def update(self):
-        self.rect.x += -5
+        self.rect.x -= self.speedx
 
         self.image = self.banana[self.banana_count]
         self.image = pygame.transform.scale(self.image, (110, 100))
@@ -158,7 +159,7 @@ class Banana(pygame.sprite.Sprite):
         if self.banana_count > 5:
             self.banana_count = 0
             
-        if self.rect.left > WIDTH:
+        if self.rect.right < 0:
             self.kill()
         
 pygame.init()
@@ -170,12 +171,10 @@ clock = pygame.time.Clock()
 
 all_sprites = pygame.sprite.Group()
 rockets = pygame.sprite.Group()
+bananas = pygame.sprite.Group()
 
 player = Player()
 all_sprites.add(player)
-
-banana = Banana()
-all_sprites.add(banana)
 
 bkgr_image = pygame.image.load(os.path.join(img_folder, "Jungle-Background.png")).convert()
 background = pygame.transform.scale(bkgr_image, (WIDTH, HEIGHT))
@@ -190,6 +189,9 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    if len(bananas) < 8:
+        newBanana()
+    
     all_sprites.update()
                 
     screen.blit(background, background_rect)
