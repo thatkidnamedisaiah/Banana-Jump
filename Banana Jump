@@ -68,10 +68,10 @@ class Player(pygame.sprite.Sprite):
         self.pos += self.vel + 0.5  *  self.acc
 
         if self.pos.x > WIDTH:
-             self.pos.x = 0
-        if self.pos.x < 0:
              self.pos.x = WIDTH
-
+        if self.pos.x < 0:
+             self.pos.x = 0
+             
         if self.pos.y > GROUND:
              self.pos.y = GROUND + 1
              self.vel.y = 0
