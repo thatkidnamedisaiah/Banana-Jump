@@ -23,6 +23,7 @@ GRAY = (165, 165, 165)
 
 game_folder = os.path.dirname(__file__)
 img_folder = os.path.join(game_folder, "Banana__Jump__Pictures")
+snd_folder = os.path.join(game_folder, "Banana__Jump__Sounds")
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -142,7 +143,7 @@ class Banana(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(WIDTH, WIDTH + 400)
         self.rect.y = random.randrange(0, HEIGHT - self.rect.height)
-        self.speedx = random.randrange(1, 5)
+        self.speedx = random.randrange(3, 10)
         
     def update(self):
         self.rect.x -= self.speedx
@@ -165,6 +166,8 @@ pygame.display.set_caption("Banana Jump")
 
 clock = pygame.time.Clock()
 
+pop = pygame.mixer.Sound(os.path.join(snd_folder, "pop.wav"))
+
 all_sprites = pygame.sprite.Group()
 rockets = pygame.sprite.Group()
 bananas = pygame.sprite.Group()
@@ -183,6 +186,8 @@ bkgr_image = pygame.image.load(os.path.join(img_folder, "Jungle-Background.png")
 background = pygame.transform.scale(bkgr_image, (WIDTH, HEIGHT))
 background_rect = background.get_rect()
 
+bkgr_x = 0
+
 running = True
 while running:
     
@@ -200,8 +205,14 @@ while running:
     hits = pygame.sprite.groupcollide(bananas, rockets, True, True)
     for hit in hits:
         newBanana()
+        pop.play()
     
-    screen.blit(background, background_rect)
+    rel_x = bkgr_x % background.get_rect().width
+    screen.blit(background, (rel_x - background.get_rect().width, 0))
+    if rel_x < WIDTH:
+        screen.blit(background, (rel_x, 0))
+    bkgr_x -= 3
+    
     all_sprites.draw(screen)
 
     pygame.display.flip()
