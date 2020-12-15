@@ -25,12 +25,28 @@ game_folder = os.path.dirname(__file__)
 img_folder = os.path.join(game_folder, "Banana__Jump__Pictures")
 snd_folder = os.path.join(game_folder, "Banana__Jump__Sounds")
 
+def show_start_screen():
+    
+    background = pygame.image.load(os.path.join(img_folder, "Title_Screen.png")).convert()
+    background = pygame.transform.scale(background, (WIDTH, HEIGHT))
+    background_rect = background.get_rect()
+    screen.blit(background, background_rect)
+    pygame.display.flip()
+    waiting = True
+    while waiting:
+        clock.tick(FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYUP:
+                waiting = False
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(os.path.join(img_folder, "monkey.png")).convert()
-        self.image = pygame.transform.scale(self.image, (300, 150))
-        self.image.set_colorkey(WHITE)
+        self.image = pygame.image.load(os.path.join(img_folder, "monkey_0.png")).convert()
+        self.image = pygame.transform.scale(self.image, (200, 200))
+        self.image.set_colorkey(GREEN)
         self.rect = self.image.get_rect()
         self.radius = 20
         self.rect.centerx = WIDTH / 2
@@ -188,8 +204,13 @@ background_rect = background.get_rect()
 
 bkgr_x = 0
 
+start = True
 running = True
 while running:
+    
+    if start:
+        show_start_screen()
+        start = False
     
     clock.tick(FPS)
 
